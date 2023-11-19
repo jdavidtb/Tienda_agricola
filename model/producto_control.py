@@ -1,5 +1,3 @@
-# producto_control.py
-
 from sqlalchemy import Column, Integer, String, Float, DateTime
 from sqlalchemy.orm import relationship
 from base import Base
