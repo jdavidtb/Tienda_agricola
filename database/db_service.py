@@ -30,3 +30,5 @@ class DBService:
     def rollback(self):
         self.session.rollback()
 
+def init_db():
+    Base.metadata.create_all(engine)

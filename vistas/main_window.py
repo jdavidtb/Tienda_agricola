@@ -1,8 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from antibioticos_window import Ui_AntibioticosWindow
-from factura_window import Ui_FacturaWindow
-from cliente_window import Ui_ClienteWindow
-from producto_window import Ui_ProductosWindow
+from .antibioticos_window import Ui_AntibioticosWindow
+from .factura_window import Ui_FacturaWindow
+from .cliente_window import Ui_ClienteWindow
+from .producto_window import Ui_ProductosControlWindow
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -57,7 +57,7 @@ class Ui_MainWindow(object):
 
     def abrirVentanaProductos(self):
         self.ventanaProductos = QtWidgets.QMainWindow()
-        ui = Ui_ProductosWindow()
+        ui = Ui_ProductosControlWindow()
         ui.setupUi(self.ventanaProductos)
         self.ventanaProductos.show()
     def abrirVentanaFacturas(self):

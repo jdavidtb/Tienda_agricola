@@ -1,8 +1,9 @@
 from sqlalchemy import Column, Integer, Float, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from base import Base
+from .base import Base
 from datetime import datetime
-
+from .producto_control import productos_factura_association
+from .antibiotico import antibioticos_factura_association
 
 class Factura(Base):
     __tablename__ = 'facturas'
@@ -14,8 +15,9 @@ class Factura(Base):
 
     # Relaciones con Cliente y los productos
     cliente = relationship("Cliente", back_populates="facturas")
-    productos_control = relationship("ProductoControl", back_populates="facturas")
     antibioticos = relationship("Antibiotico", back_populates="facturas")
+    productos_control = relationship("ProductoControl", secondary=productos_factura_association, back_populates="facturas")
+    antibioticos = relationship("Antibiotico", secondary=antibioticos_factura_association, back_populates="facturas")
 
     def __init__(self, cliente_id):
         self.cliente_id = cliente_id

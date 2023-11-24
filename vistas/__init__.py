@@ -1,0 +1,4 @@
+from .cliente_window import Ui_ClienteWindow
+from .factura_window import Ui_FacturaWindow
+from .antibioticos_window import Ui_AntibioticosWindow
+from .producto_window import Ui_ProductosControlWindow

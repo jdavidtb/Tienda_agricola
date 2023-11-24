@@ -1,8 +1,13 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime
+from sqlalchemy import Column, Integer, String, Float, DateTime, Table, ForeignKey
 from sqlalchemy.orm import relationship
-from base import Base
+from .base import Base
 from datetime import datetime
 
+# Tabla asociativa para la relación muchos a muchos entre Factura y ProductoControl
+productos_factura_association = Table('productos_factura', Base.metadata,
+    Column('factura_id', Integer, ForeignKey('facturas.id')),
+    Column('producto_control_id', Integer, ForeignKey('productos_control.id'))
+)
 
 class ProductoControl(Base):
     __tablename__ = 'productos_control'
@@ -13,7 +18,7 @@ class ProductoControl(Base):
     frecuencia_aplicacion = Column(String(100))
     valor = Column(Float, nullable=False)
     # Relación muchos a muchos con Factura
-    facturas = relationship("Factura", back_populates="productos_control")
+    facturas = relationship("Factura", secondary=productos_factura_association, back_populates="productos_control")
 
     def __init__(self, nombre, registro_ica, frecuencia_aplicacion, valor):
         self.nombre = nombre

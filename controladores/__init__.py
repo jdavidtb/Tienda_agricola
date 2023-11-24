@@ -1,0 +1,6 @@
+from .clientes_controller import ClienteController
+from .anbioticoController import AntibioticoController
+from .control_fertilizantesController import ControlDeFertilizantesController
+from .factura_controller import FacturaController
+from .control_plagasController import ControlDePlagasController
+from .producto_controlController import ProductoControlController
