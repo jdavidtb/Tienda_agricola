@@ -38,3 +38,22 @@ class FacturaController:
         factura = self.obtener_factura_por_id(factura_id)
         if factura:
             self.db_service.delete(factura)
+
+
+    def actualizar_factura(self, factura_id, cliente_id, productos):
+        factura = self.db_service.session.query(Factura).get(factura_id)
+        if factura:
+            factura.cliente_id = cliente_id
+            # Limpiar los productos actuales y agregar los nuevos
+            factura.productos_control.clear()
+            factura.antibioticos.clear()
+            for prod in productos:
+                if prod['es_antibiotico']:
+                    antibiotico = self.db_service.session.query(Antibiotico).get(prod['id'])
+                    factura.agregar_antibiotico(antibiotico)
+                else:
+                    producto_control = self.db_service.session.query(ProductoControl).get(prod['id'])
+                    factura.agregar_producto_control(producto_control)
+            self.db_service.commit()
+        else:
+            raise ValueError("Factura no encontrada")
