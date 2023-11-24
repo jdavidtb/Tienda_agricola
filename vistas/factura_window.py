@@ -120,7 +120,6 @@ def eliminar_factura(self):
 
     try:
         self.facturaController.eliminar_factura(factura_id)
-        # Aquí podrías actualizar la UI para reflejar que la factura ha sido eliminada
     except Exception as e:
         self.mostrar_mensaje_error(str(e))
 
