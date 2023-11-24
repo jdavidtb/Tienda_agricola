@@ -1,5 +1,6 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
+from controladores.clientes_controller import ClienteController
 
 class Ui_ClienteWindow(object):
     def setupUi(self, ClienteWindow):
@@ -26,7 +27,7 @@ class Ui_ClienteWindow(object):
         self.button_guardar = QtWidgets.QPushButton(self.centralwidget)
         self.button_guardar.setGeometry(QtCore.QRect(340, 20, 90, 28))
         self.button_guardar.setText("Guardar")
-        
+
         self.button_editar = QtWidgets.QPushButton(self.centralwidget)
         self.button_editar.setGeometry(QtCore.QRect(340, 60, 90, 28))
         self.button_editar.setText("Editar")
@@ -54,10 +55,71 @@ class Ui_ClienteWindow(object):
         self.table_clientes.setHorizontalHeaderLabels(["Nombre", "Cédula"])
 
         ClienteWindow.setCentralWidget(self.centralwidget)
+        self.clienteController = ClienteController()
+        # Conectar botones con las funciones
+        self.button_guardar.clicked.connect(self.guardar_cliente)
+        self.button_editar.clicked.connect(self.editar_cliente)
+        self.button_eliminar.clicked.connect(self.eliminar_cliente)
+        self.button_buscar.clicked.connect(self.buscar_cliente_por_cedula)
+        # Actualizar la lista de clientes al iniciar
+        self.cargar_clientes()
+
+    # Funciones conectadas a los botones
+    def guardar_cliente(self):
+        nombre = self.text_nombre.text()
+        cedula = self.text_cedula.text()
+        self.clienteController.crear_cliente(nombre, cedula)
+        self.cargar_clientes()
+
+    def editar_cliente(self):
+        # Obtener el cliente seleccionado de la tabla
+        selected_items = self.table_clientes.selectedItems()
+        if selected_items:
+            row = selected_items[0].row()
+            cliente_id = self.table_clientes.item(row, 0).data(QtCore.Qt.UserRole)
+            nombre = self.text_nombre.text()
+            cedula = self.text_cedula.text()
+            self.clienteController.actualizar_cliente(cliente_id, nombre, cedula)
+            self.cargar_clientes()
+
+    def eliminar_cliente(self):
+        selected_items = self.table_clientes.selectedItems()
+        if selected_items:
+            row = selected_items[0].row()
+            cliente_id = self.table_clientes.item(row, 0).data(QtCore.Qt.UserRole)
+            self.clienteController.eliminar_cliente(cliente_id)
+            self.cargar_clientes()
+
+    def buscar_cliente_por_cedula(self):
+        cedula = self.text_buscar.text()
+        cliente = self.clienteController.obtener_cliente_por_cedula(cedula)
+        if cliente:
+            # Limpia la tabla y agrega el cliente encontrado
+            self.table_clientes.clearContents()
+            self.table_clientes.setRowCount(1)
+            self.table_clientes.setItem(0, 0, QtWidgets.QTableWidgetItem(cliente.nombre))
+            self.table_clientes.setItem(0, 1, QtWidgets.QTableWidgetItem(cliente.cedula))
+            self.table_clientes.item(0, 0).setData(QtCore.Qt.UserRole, cliente.id)
+        else:
+            # Manejar el caso de no encontrar el cliente
+            self.table_clientes.clearContents()
+            self.table_clientes.setRowCount(0)
+            QtWidgets.QMessageBox.information(None, 'Búsqueda', 'Cliente no encontrado.')
+
+    def cargar_clientes(self):
+        # Obtener todos los clientes y cargarlos en la tabla
+        clientes = self.clienteController.obtener_todos_los_clientes()
+        self.table_clientes.clearContents()
+        self.table_clientes.setRowCount(len(clientes))
+        for row_number, cliente in enumerate(clientes):
+            self.table_clientes.setItem(row_number, 0, QtWidgets.QTableWidgetItem(cliente.nombre))
+            self.table_clientes.setItem(row_number, 1, QtWidgets.QTableWidgetItem(cliente.cedula))
+            self.table_clientes.item(row_number, 0).setData(QtCore.Qt.UserRole, cliente.id)
 
     def buscar_cliente_por_cedula(self):
         cedula = self.text_buscar.text()
         pass
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

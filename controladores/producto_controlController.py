@@ -3,6 +3,7 @@ from model.control_fertilizantes import ControlDeFertilizantes
 from model.control_de_plagas import ControlDePlagas
 from database.db_service import DBService
 
+
 class ProductoControlController:
     def __init__(self):
         self.db_service = DBService()
@@ -37,3 +38,6 @@ class ProductoControlController:
             self.db_service.delete(producto)
         else:
             raise ValueError("Producto no encontrado")
+
+    def obtener_producto_por_nombre(self, nombre_producto):
+        return self.db_service.session.query(ProductoControl).filter_by(nombre=nombre_producto).first()

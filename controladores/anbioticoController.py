@@ -29,3 +29,7 @@ class AntibioticoController:
             self.db_service.delete(antibiotico)
         else:
             raise ValueError("Antibiótico no encontrado")
+
+    def es_producto_antibiotico(self, producto_id):
+        antibiotico = self.db_service.session.query(Antibiotico).get(producto_id)
+        return antibiotico is not None

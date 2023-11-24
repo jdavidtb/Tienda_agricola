@@ -1,5 +1,8 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
+from controladores.control_fertilizantesController import ControlDeFertilizantesController
+from controladores.control_plagasController import ControlDePlagasController
+
 
 class Ui_ProductosWindow(object):
     def setupUi(self, ProductosWindow):
@@ -27,6 +30,114 @@ class Ui_ProductosWindow(object):
         ProductosWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(ProductosWindow)
         QtCore.QMetaObject.connectSlotsByName(ProductosWindow)
+
+        self.fertilizanteController = ControlDeFertilizantesController()
+        self.plagasController = ControlDePlagasController()
+        # Conectar botones
+        self.agregarFertilizanteButton.clicked.connect(self.agregar_fertilizante)
+        self.editarControlPlagasButton.clicked.connect(self.editar_fertilizante)
+        self.eliminarControlPlagasButton.clicked.connect(self.eliminar_fertilizante)
+        self.agregarControlPlagasButton.clicked.connect(self.agregar_control_plagas)
+        self.editarControlPlagasButton.clicked.connect(self.editar_control_plagas)
+        self.eliminarControlPlagasButton.clicked.connect(self.eliminar_control_plagas)
+
+    def agregar_fertilizante(self):
+        nombre = self.nombreFertilizanteLineEdit.text()
+        registro_ica = self.registroICAFertilizanteLineEdit.text()
+        fecha_aplicacion = self.fechaAplicacionFertilizanteDateEdit.date().toString("yyyy-MM-dd")
+        valor = ...  # Obtener el valor
+
+        try:
+            self.fertilizanteController.crear_fertilizante(nombre, registro_ica, "frecuencia", valor, fecha_aplicacion)
+            # Actualizar tabla
+            self.cargar_fertilizantes()
+        except Exception as e:
+            self.mostrar_mensaje_error(str(e))
+
+    def editar_fertilizante(self):
+        selected_items = self.fertilizantesTableWidget.selectedItems()
+        if selected_items:
+            row = selected_items[0].row()
+            fertilizante_id = self.fertilizantesTableWidget.item(row, 0).data(QtCore.Qt.UserRole)
+            nombre = self.nombreFertilizanteLineEdit.text()
+            registro_ica = self.registroICAFertilizanteLineEdit.text()
+            fecha_aplicacion = self.fechaAplicacionFertilizanteDateEdit.date().toString("yyyy-MM-dd")
+            valor = self.valorFertilizanteLineEdit.text()  # Aquí leemos el valor del QLineEdit
+
+            try:
+                # Asegúrate de que los tipos de datos coincidan con lo que espera tu controlador y base de datos
+                valor = float(valor)  # Convierte a float si el valor es un número decimal
+                self.fertilizanteController.actualizar_fertilizante(fertilizante_id, nombre=nombre,
+                                                                    registro_ica=registro_ica,
+                                                                    fecha_ultima_aplicacion=fecha_aplicacion,
+                                                                    valor=valor)
+                self.cargar_fertilizantes()
+            except Exception as e:
+                self.mostrar_mensaje_error(str(e))
+        else:
+            self.mostrar_mensaje_error("Selecciona un fertilizante para editar")
+
+    def eliminar_fertilizante(self):
+        selected_items = self.fertilizantesTableWidget.selectedItems()
+        if selected_items:
+            row = selected_items[0].row()
+            fertilizante_id = self.fertilizantesTableWidget.item(row, 0).data(QtCore.Qt.UserRole)
+
+            try:
+                self.fertilizanteController.eliminar_fertilizante(fertilizante_id)
+                self.cargar_fertilizantes()
+            except Exception as e:
+                self.mostrar_mensaje_error(str(e))
+        else:
+            self.mostrar_mensaje_error("Selecciona un fertilizante para eliminar")
+
+    def mostrar_mensaje_error(self, mensaje):
+        QtWidgets.QMessageBox.critical(None, "Error", mensaje)
+
+    def agregar_control_plagas(self):
+        nombre = self.nombreControlPlagasLineEdit.text()
+        registro_ica = self.registroICAControlPlagasLineEdit.text()
+        periodo_carencia = self.periodoCarenciaControlPlagasLineEdit.text()
+        valor = ...  # Obtener el valor
+
+        try:
+            self.plagasController.crear_control_plagas(nombre, registro_ica, "frecuencia", valor, periodo_carencia)
+            self.cargar_controles_plagas()
+        except Exception as e:
+            self.mostrar_mensaje_error(str(e))
+
+    def editar_control_plagas(self):
+        selected_items = self.controlesPlagasTableWidget.selectedItems()
+        if selected_items:
+            row = selected_items[0].row()
+            control_plagas_id = self.controlesPlagasTableWidget.item(row, 0).data(QtCore.Qt.UserRole)
+            nombre = self.nombreControlPlagasLineEdit.text()
+            registro_ica = self.registroICAControlPlagasLineEdit.text()
+            periodo_carencia = self.periodoCarenciaControlPlagasLineEdit.text()
+
+            try:
+                self.plagasController.actualizar_control_plagas(control_plagas_id, nombre=nombre,
+                                                                registro_ica=registro_ica,
+                                                                periodo_carencia=periodo_carencia, valor=valor)
+                self.cargar_controles_plagas()
+            except Exception as e:
+                self.mostrar_mensaje_error(str(e))
+        else:
+            self.mostrar_mensaje_error("Selecciona un control de plagas para editar")
+
+    def eliminar_control_plagas(self):
+        selected_items = self.controlesPlagasTableWidget.selectedItems()
+        if selected_items:
+            row = selected_items[0].row()
+            control_plagas_id = self.controlesPlagasTableWidget.item(row, 0).data(QtCore.Qt.UserRole)
+
+            try:
+                self.plagasController.eliminar_control_plagas(control_plagas_id)
+                self.cargar_controles_plagas()
+            except Exception as e:
+                self.mostrar_mensaje_error(str(e))
+        else:
+            self.mostrar_mensaje_error("Selecciona un control de plagas para eliminar")
 
     def setupFertilizantesTab(self, tab):
         # Componentes para Fertilizantes
@@ -69,6 +180,7 @@ class Ui_ProductosWindow(object):
     def retranslateUi(self, ProductosWindow):
         _translate = QtCore.QCoreApplication.translate
         ProductosWindow.setWindowTitle(_translate("ProductosWindow", "Gestión de Productos"))
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

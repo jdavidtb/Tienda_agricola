@@ -1,16 +1,17 @@
-# This is a sample Python script.
+from PyQt5 import QtWidgets
+from vistas.main_window   import Ui_MainWindow
+import sys
 
-# Press Mayús+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+def main():
+    app = QtWidgets.QApplication(sys.argv)  # Crea la aplicación
 
+    # Configura la ventana principal
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()  # Muestra la ventana principal
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+    sys.exit(app.exec_())  # Inicia el bucle de eventos
 
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+if __name__ == "__main__":
+    main()

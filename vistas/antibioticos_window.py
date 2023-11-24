@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from controladores.anbioticoController import AntibioticoController
 
 class Ui_AntibioticosWindow(object):
     def setupUi(self, AntibioticosWindow):
@@ -55,6 +56,63 @@ class Ui_AntibioticosWindow(object):
 
         self.retranslateUi(AntibioticosWindow)
         QtCore.QMetaObject.connectSlotsByName(AntibioticosWindow)
+
+        self.button_guardar.clicked.connect(self.agregar_antibiotico)
+        self.button_editar.clicked.connect(self.editar_antibiotico)
+        self.button_eliminar.clicked.connect(self.eliminar_antibiotico)
+
+        # Inicialización del controlador
+        self.antibioticoController = AntibioticoController()
+
+    def agregar_antibiotico(self):
+        nombre = self.text_nombre_antibiotico.text()
+        dosis = int(self.text_dosis.text())
+        tipo_animal = self.text_tipo_animal.text()
+        precio = float(self.text_valor_antibiotico.text())
+
+        try:
+            Antibiotico.validar_dosis(dosis)
+            self.antibioticoController.crear_antibiotico(nombre, dosis, tipo_animal, precio)
+            self.cargar_antibioticos()
+        except Exception as e:
+            self.mostrar_mensaje_error(str(e))
+
+    def editar_antibiotico(self):
+        selected_items = self.table_antibioticos.selectedItems()
+        if selected_items:
+            row = selected_items[0].row()
+            antibiotico_id = self.table_antibioticos.item(row, 0).data(QtCore.Qt.UserRole)
+            nombre = self.text_nombre_antibiotico.text()
+            dosis = int(self.text_dosis.text())
+            tipo_animal = self.text_tipo_animal.text()
+            precio = float(self.text_valor_antibiotico.text())
+
+            try:
+                Antibiotico.validar_dosis(dosis)
+                self.antibioticoController.actualizar_antibiotico(antibiotico_id, nombre=nombre, dosis=dosis, tipo_animal=tipo_animal, precio=precio)
+                self.cargar_antibioticos()
+            except Exception as e:
+                self.mostrar_mensaje_error(str(e))
+        else:
+            self.mostrar_mensaje_error("Selecciona un antibiótico para editar")
+
+
+    def eliminar_antibiotico(self):
+        selected_items = self.table_antibioticos.selectedItems()
+        if selected_items:
+            row = selected_items[0].row()
+            antibiotico_id = self.table_antibioticos.item(row, 0).data(QtCore.Qt.UserRole)
+
+            try:
+                self.antibioticoController.eliminar_antibiotico(antibiotico_id)
+                self.cargar_antibioticos()
+            except Exception as e:
+                self.mostrar_mensaje_error(str(e))
+        else:
+            self.mostrar_mensaje_error("Selecciona un antibiótico para eliminar")
+
+
+
 
     def retranslateUi(self, AntibioticosWindow):
         _translate = QtCore.QCoreApplication.translate
