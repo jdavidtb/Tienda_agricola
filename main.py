@@ -9,7 +9,7 @@ def main():
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-    MainWindow.show()  # Muestra la ventana principal
+    MainWindow.show()  
 
     sys.exit(app.exec_())  # Inicia el bucle de eventos
 
