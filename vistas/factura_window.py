@@ -112,20 +112,60 @@ class Ui_FacturaWindow(object):
             self.mostrar_mensaje_error(str(e))
 
 
-def eliminar_factura(self):
-    factura_id = self.obtener_id_factura_actual()
-    if factura_id is None:
-        self.mostrar_mensaje_error("No se ha seleccionado ninguna factura")
-        return
+    def eliminar_factura(self):
+        factura_id = self.obtener_id_factura_actual()
+        if factura_id is None:
+            self.mostrar_mensaje_error("No se ha seleccionado ninguna factura")
+            return
 
-    try:
-        self.facturaController.eliminar_factura(factura_id)
-    except Exception as e:
-        self.mostrar_mensaje_error(str(e))
+        try:
+            self.facturaController.eliminar_factura(factura_id)
+        except Exception as e:
+            self.mostrar_mensaje_error(str(e))
 
 
-def mostrar_mensaje_error(self, mensaje):
-    QtWidgets.QMessageBox.critical(None, "Error", mensaje)
+    def eliminar_producto(self):
+            selected_items = self.table_productos.selectedItems()
+            if selected_items:
+                row = selected_items[0].row()  # Obtiene la fila del producto seleccionado
+
+                # Suponemos que tienes el ID del producto almacenado en la tabla
+                producto_id = self.table_productos.item(row, 0).text()  # Ajusta el índice de la columna según corresponda
+
+                # Suponemos que necesitas el ID de la factura actual
+                factura_id = self.obtener_id_factura_actual()  # Asegúrate de que esta función devuelva el ID correcto
+
+                # Llamada al método del controlador para eliminar el producto de la factura
+                try:
+                    self.facturaController.eliminar_producto_de_factura(factura_id, producto_id)
+                    self.table_productos.removeRow(row)  # Elimina la fila de la tabla
+                except Exception as e:
+                    self.mostrar_mensaje_error(str(e))
+            else:
+                self.mostrar_mensaje_error("Selecciona un producto para eliminar")
+
+    def obtener_id_cliente_seleccionado(self):
+        return self.combo_cliente.currentData()
+
+    def crear_factura(self):
+        cliente_id = self.obtener_id_cliente_seleccionado()
+        if cliente_id is not None:
+            try:
+                nueva_factura = self.facturaController.crear_factura(cliente_id)
+                # Aquí puedes manejar lo que sucede después de crear la factura
+                # Por ejemplo, mostrar un mensaje de éxito, actualizar una lista de facturas, etc.
+                self.mostrar_mensaje_exito(f"Factura creada con éxito. ID de factura: {nueva_factura.id}")
+            except Exception as e:
+                self.mostrar_mensaje_error(f"Error al crear factura: {e}")
+        else:
+            self.mostrar_mensaje_error("Selecciona un cliente para crear la factura")
+
+    def mostrar_mensaje_exito(self, mensaje):
+        QtWidgets.QMessageBox.information(None, "Éxito", mensaje)
+
+    def mostrar_mensaje_error(self, mensaje):
+        QtWidgets.QMessageBox.critical(None, "Error", mensaje)
+
 
 
 if __name__ == "__main__":

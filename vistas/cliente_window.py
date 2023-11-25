@@ -1,6 +1,8 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from controladores.clientes_controller import ClienteController
+from PyQt5.QtCore import Qt
+
 
 class Ui_ClienteWindow(object):
     def setupUi(self, ClienteWindow):
@@ -57,7 +59,8 @@ class Ui_ClienteWindow(object):
         ClienteWindow.setCentralWidget(self.centralwidget)
         self.clienteController = ClienteController()
         # Conectar botones con las funciones
-        self.button_guardar.clicked.connect(self.guardar_cliente)
+        QtCore.QMetaObject.connectSlotsByName(ClienteWindow)
+        self.button_guardar.clicked.connect(self.metodo_prueba)
         self.button_editar.clicked.connect(self.editar_cliente)
         self.button_eliminar.clicked.connect(self.eliminar_cliente)
         self.button_buscar.clicked.connect(self.buscar_cliente_por_cedula)
@@ -66,11 +69,33 @@ class Ui_ClienteWindow(object):
 
     # Funciones conectadas a los botones
     def guardar_cliente(self):
-        nombre = self.text_nombre.text()
-        cedula = self.text_cedula.text()
-        self.clienteController.crear_cliente(nombre, cedula)
-        self.cargar_clientes()
+        print("Guardando cliente...")
+        nombre = self.text_nombre.text().strip()
+        cedula = self.text_cedula.text().strip()
+        print(f"Guardando cliente: Nombre={nombre}, Cedula={cedula}")
+        if nombre and cedula:  # Asegúrate de que ambos campos estén llenos
+            try:
+                self.clienteController.crear_cliente(nombre, cedula)
+                self.actualizar_tabla_clientes()  # Llamada a la función para actualizar la tabla
+                QtWidgets.QMessageBox.information(None, "Éxito", "Cliente guardado con éxito.")
+                self.text_nombre.clear()  # Limpia el campo del nombre
+                self.text_cedula.clear()  # Limpia el campo de la cédula
+            except Exception as e:
+                QtWidgets.QMessageBox.critical(None, "Error", f"Error al guardar el cliente: {e}")
+        else:
+            QtWidgets.QMessageBox.warning(None, "Advertencia", "Nombre y cédula son requeridos.")
 
+    def actualizar_tabla_clientes(self):
+        print("Actualizando tabla de clientes...")
+        self.table_clientes.setRowCount(0)  # Limpia la tabla
+        clientes = self.clienteController.obtener_todos_los_clientes()
+        for cliente in clientes:
+            row_position = self.table_clientes.rowCount()
+            self.table_clientes.insertRow(row_position)
+            self.table_clientes.setItem(row_position, 0, QtWidgets.QTableWidgetItem(cliente.nombre))
+            self.table_clientes.setItem(row_position, 1, QtWidgets.QTableWidgetItem(cliente.cedula))
+            # Si usas el ID, guárdalo como un dato del item (no visible para el usuario)
+            self.table_clientes.item(row_position, 0).setData(QtCore.Qt.UserRole, cliente.id)
     def editar_cliente(self):
         # Obtener el cliente seleccionado de la tabla
         selected_items = self.table_clientes.selectedItems()
@@ -116,9 +141,9 @@ class Ui_ClienteWindow(object):
             self.table_clientes.setItem(row_number, 1, QtWidgets.QTableWidgetItem(cliente.cedula))
             self.table_clientes.item(row_number, 0).setData(QtCore.Qt.UserRole, cliente.id)
 
-    def buscar_cliente_por_cedula(self):
-        cedula = self.text_buscar.text()
-        pass
+    def metodo_prueba(self):
+        print("El botón ha sido presionado.")
+
 
 
 if __name__ == "__main__":

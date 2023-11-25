@@ -6,6 +6,7 @@ class ClienteController:
         self.db_service = DBService()
 
     def crear_cliente(self, nombre, cedula):
+        print(f"Creando cliente en el controlador: Nombre={nombre}, Cedula={cedula}")
         nuevo_cliente = Cliente(nombre=nombre, cedula=cedula)
         self.db_service.add(nuevo_cliente)
 

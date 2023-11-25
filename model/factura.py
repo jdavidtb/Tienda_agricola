@@ -15,7 +15,6 @@ class Factura(Base):
 
     # Relaciones con Cliente y los productos
     cliente = relationship("Cliente", back_populates="facturas")
-    antibioticos = relationship("Antibiotico", back_populates="facturas")
     productos_control = relationship("ProductoControl", secondary=productos_factura_association, back_populates="facturas")
     antibioticos = relationship("Antibiotico", secondary=antibioticos_factura_association, back_populates="facturas")
 

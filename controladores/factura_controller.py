@@ -57,3 +57,23 @@ class FacturaController:
             self.db_service.commit()
         else:
             raise ValueError("Factura no encontrada")
+
+    def eliminar_producto_de_factura(self, factura_id, producto_id, es_antibiotico=False):
+        factura = self.db_service.session.query(Factura).get(factura_id)
+        if not factura:
+            raise ValueError("Factura no encontrada")
+
+        if es_antibiotico:
+            producto = self.db_service.session.query(Antibiotico).get(producto_id)
+        else:
+            producto = self.db_service.session.query(ProductoControl).get(producto_id)
+
+        if not producto:
+            raise ValueError("Producto no encontrado")
+
+        if es_antibiotico:
+            factura.antibioticos.remove(producto)
+        else:
+            factura.productos_control.remove(producto)
+
+        self.db_service.commit()

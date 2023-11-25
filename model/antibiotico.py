@@ -21,7 +21,7 @@ class Antibiotico(Base):
 
     facturas = relationship(
         'Factura',
-        secondary='antibioticos_factura_association',
+        secondary=antibioticos_factura_association,
         back_populates='antibioticos'
     )
 
