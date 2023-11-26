@@ -11,7 +11,7 @@ class AntibioticoController:
         return antibiotico
 
     def obtener_antibiotico_por_id(self, antibiotico_id):
-        return self.db_service.session.query(Antibiotico).get(antibiotico_id)
+        return self.db_service.session.get(Antibiotico, antibiotico_id)
 
     def actualizar_antibiotico(self, antibiotico_id, **datos_actualizados):
         antibiotico = self.obtener_antibiotico_por_id(antibiotico_id)

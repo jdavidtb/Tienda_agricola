@@ -5,13 +5,19 @@ class ControlDeFertilizantesController:
     def __init__(self):
         self.db_service = DBService()
 
-    def crear_fertilizante(self, nombre, registro_ica, frecuencia_aplicacion, valor, fecha_ultima_aplicacion):
-        fertilizante = ControlDeFertilizantes(nombre=nombre, registro_ica=registro_ica, frecuencia_aplicacion=frecuencia_aplicacion, valor=valor, fecha_ultima_aplicacion=fecha_ultima_aplicacion)
+    def crear_fertilizante(self, registro_ica, frecuencia_aplicacion, nombre_producto, valor, fecha_ultima_aplicacion):
+        fertilizante = ControlDeFertilizantes(
+            registro_ica=registro_ica,
+            frecuencia_aplicacion=frecuencia_aplicacion,
+            nombre_producto=nombre_producto,
+            valor=valor,
+            fecha_ultima_aplicacion=fecha_ultima_aplicacion
+        )
         self.db_service.add(fertilizante)
         return fertilizante
 
     def obtener_fertilizante_por_id(self, fertilizante_id):
-        return self.db_service.session.query(ControlDeFertilizantes).get(fertilizante_id)
+        return self.db_service.session.get(ControlDeFertilizantes, fertilizante_id)
 
     def actualizar_fertilizante(self, fertilizante_id, **datos_actualizados):
         fertilizante = self.obtener_fertilizante_por_id(fertilizante_id)

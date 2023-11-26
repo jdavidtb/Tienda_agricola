@@ -13,4 +13,4 @@ class ControlDeFertilizantes(ProductoControl):
         self.fecha_ultima_aplicacion = fecha_ultima_aplicacion
 
     def __repr__(self):
-        return f"<ControlDeFertilizantes(nombre={self.nombre_producto}, valor={self.valor}, fecha_ultima_aplicacion={self.fecha_ultima_aplicacion})>"
+        return f"<ControlDeFertilizantes(nombre={self.nombre}, valor={self.valor}, fecha_ultima_aplicacion={self.fecha_ultima_aplicacion})>"

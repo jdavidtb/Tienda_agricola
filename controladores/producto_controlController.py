@@ -20,7 +20,7 @@ class ProductoControlController:
         return producto
 
     def obtener_producto_por_id(self, producto_id):
-        return self.db_service.session.query(ProductoControl).get(producto_id)
+        return self.db_service.session.get(ProductoControl, producto_id)
 
     def actualizar_producto_control(self, producto_id, **datos_actualizados):
         producto = self.obtener_producto_por_id(producto_id)
