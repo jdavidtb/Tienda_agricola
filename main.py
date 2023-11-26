@@ -6,12 +6,7 @@ import sys
 def main():
     init_db()  # Inicializa la base de datos y crea las tablas
 
-    # Crea una instancia de DBService y prueba la conexión
-    db_service = DBService()
-    if not db_service.test_connection():
-        print("Error al conectar con la base de datos")
-        return  # Termina la ejecución si no hay conexión
-
+   
     app = QtWidgets.QApplication(sys.argv)  # Crea la aplicación
 
     # Configura la ventana principal
