@@ -15,9 +15,8 @@ class TestClienteController(unittest.TestCase):
         cls.session = Session()
 
     def setUp(self):
-        # Inicializa aquí el controlador y cualquier otro setup antes de cada prueba
         self.controller = ClienteController()
-        self.controller.db_service.session = self.session  # Asegúrate de que el controlador use la sesión de prueba
+        self.controller.db_service.session = self.session
 
     def test_crear_cliente(self):
         self.controller.crear_cliente('Juan Perez', '12345678')
@@ -26,7 +25,6 @@ class TestClienteController(unittest.TestCase):
         self.assertEqual(cliente_creado.nombre, 'Juan Perez')
 
     def test_obtener_cliente_por_cedula(self):
-        # Asegúrate de que hay un cliente en la base de datos de prueba para buscar
         cliente = Cliente(nombre='Ana Gomez', cedula='87654321')
         self.session.add(cliente)
         self.session.commit()
@@ -35,7 +33,6 @@ class TestClienteController(unittest.TestCase):
         self.assertIsNotNone(cliente_encontrado)
         self.assertEqual(cliente_encontrado.nombre, 'Ana Gomez')
 
-    # Continúa escribiendo pruebas para actualizar_cliente, eliminar_cliente, etc.
 
     @classmethod
     def tearDownClass(cls):

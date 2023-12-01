@@ -49,7 +49,7 @@ class Ui_AntibioticosWindow(object):
         # Tabla para mostrar los antibióticos existentes
         self.table_antibioticos = QtWidgets.QTableWidget(self.centralwidget)
         self.table_antibioticos.setGeometry(QtCore.QRect(50, 180, 700, 300))
-        self.table_antibioticos.setColumnCount(5)  # Por ejemplo, ID, Nombre, Dosis, Tipo de Animal, Valor
+        self.table_antibioticos.setColumnCount(5)
         self.table_antibioticos.setHorizontalHeaderLabels(["ID", "Nombre", "Dosis", "Tipo de Animal", "Valor"])
 
         AntibioticosWindow.setCentralWidget(self.centralwidget)
@@ -71,7 +71,6 @@ class Ui_AntibioticosWindow(object):
         precio = float(self.text_valor_antibiotico.text())
 
         try:
-            Antibiotico.validar_dosis(dosis)
             self.antibioticoController.crear_antibiotico(nombre, dosis, tipo_animal, precio)
             self.cargar_antibioticos()
         except Exception as e:
@@ -88,7 +87,6 @@ class Ui_AntibioticosWindow(object):
             precio = float(self.text_valor_antibiotico.text())
 
             try:
-                Antibiotico.validar_dosis(dosis)
                 self.antibioticoController.actualizar_antibiotico(antibiotico_id, nombre=nombre, dosis=dosis, tipo_animal=tipo_animal, precio=precio)
                 self.cargar_antibioticos()
             except Exception as e:
@@ -105,7 +103,6 @@ class Ui_AntibioticosWindow(object):
 
             try:
                 self.antibioticoController.eliminar_antibiotico(antibiotico_id)
-                self.cargar_antibioticos()
             except Exception as e:
                 self.mostrar_mensaje_error(str(e))
         else:

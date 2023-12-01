@@ -94,7 +94,6 @@ class Ui_ClienteWindow(object):
             self.table_clientes.insertRow(row_position)
             self.table_clientes.setItem(row_position, 0, QtWidgets.QTableWidgetItem(cliente.nombre))
             self.table_clientes.setItem(row_position, 1, QtWidgets.QTableWidgetItem(cliente.cedula))
-            # Si usas el ID, guárdalo como un dato del item (no visible para el usuario)
             self.table_clientes.item(row_position, 0).setData(QtCore.Qt.UserRole, cliente.id)
     def editar_cliente(self):
         # Obtener el cliente seleccionado de la tabla
