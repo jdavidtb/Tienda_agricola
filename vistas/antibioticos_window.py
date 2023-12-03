@@ -94,7 +94,31 @@ class Ui_AntibioticosWindow(object):
         else:
             self.mostrar_mensaje_error("Selecciona un antibiótico para editar")
 
+    def mostrar_mensaje_error(self, mensaje):
+        QtWidgets.QMessageBox.critical(None, "Error", mensaje)
 
+    def cargar_antibioticos(self):
+        antibioticos = self.antibioticoController.obtener_antibiotico_por_id()
+        self.table_antibioticos.clearContents()
+        self.table_antibioticos.setRowCount(len(antibioticos))
+        for row_number, cliente in enumerate(antibioticos):
+            self.table_antibioticos.setItem(row_number, 1, QtWidgets.QTableWidgetItem(antibioticos.nombre))
+            self.table_antibioticos.setItem(row_number, 2, QtWidgets.QTableWidgetItem(antibioticos.dosis))
+            self.table_antibioticos.setItem(row_number, 3, QtWidgets.QTableWidgetItem(antibioticos.tipo_animal))
+            self.table_antibioticos.setItem(row_number, 4, QtWidgets.QTableWidgetItem(antibioticos.precio))
+            self.table_antibioticos.setItem(row_number,  0, QtWidgets.QTableWidgetItem(antibioticos.id))
+
+    def actualizar_tabla_antibioticos(self):
+        print("Actualizando tabla de antibioticos...")
+        self.table_antibioticos.setRowCount(0)  # Limpia la tabla
+        antibioticos = self.antibioticoController.obtener_antibiotico_por_id()
+        for antibiotoco in antibioticos:
+            row_position = self.table_antibioticos.rowCount()
+            self.table_antibioticos.setItem(row_position, 1, QtWidgets.QTableWidgetItem(antibioticos.nombre))
+            self.table_antibioticos.setItem(row_position, 2, QtWidgets.QTableWidgetItem(antibioticos.dosis))
+            self.table_antibioticos.setItem(row_position, 3, QtWidgets.QTableWidgetItem(antibioticos.tipo_animal))
+            self.table_antibioticos.setItem(row_position, 4, QtWidgets.QTableWidgetItem(antibioticos.precio))
+            self.table_antibioticos.setItem(row_position, 0, QtWidgets.QTableWidgetItem(antibioticos.id))
     def eliminar_antibiotico(self):
         selected_items = self.table_antibioticos.selectedItems()
         if selected_items:
